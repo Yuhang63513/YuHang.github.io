@@ -7,9 +7,7 @@
 
   <link rel="stylesheet" href="https://unpkg.com/modern-normalize/modern-normalize.css" />
   
-  <!-- 添加基础样式 -->
   <style>
-    /* 基础样式 */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -30,7 +28,6 @@
       padding: 0 20px;
     }
     
-    /* 卡片样式 */
     .card {
       background: #fff;
       border-radius: 8px;
@@ -40,7 +37,6 @@
       border: 1px solid #e0e0e0;
     }
     
-    /* 按钮样式 */
     .btn {
       display: inline-block;
       padding: 10px 20px;
@@ -70,9 +66,13 @@
     .btn-small {
       padding: 5px 10px;
       font-size: 14px;
+      background: white;
+      color: #0074D9;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
     }
     
-    /* 打字效果 */
     .typing {
       overflow: hidden;
       border-right: 2px solid #0074D9;
@@ -90,7 +90,6 @@
       50% { border-color: #0074D9; }
     }
     
-    /* 暗色主题 */
     body.dark-theme {
       background-color: #1a1a1a;
       color: #fff;
@@ -106,7 +105,6 @@
       border-color: #fff;
     }
     
-    /* 导航条样式 */
     nav a {
       color: white;
       text-decoration: none;
@@ -114,11 +112,11 @@
       font-weight: bold;
       transition: color 0.2s;
     }
+    
     nav a:hover {
       color: yellow;
     }
 
-    /* 知识图谱容器 */
     #graph {
       width: 100%;
       height: 500px;
@@ -132,7 +130,6 @@
       border-color: #444;
     }
     
-    /* 响应式设计 */
     @media (max-width: 768px) {
       .header-row {
         flex-direction: column;
@@ -154,7 +151,6 @@
     }
   </style>
 
-  <!-- Cytoscape.js -->
   <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
 </head>
 <body>
@@ -167,7 +163,7 @@
         <a href="#kg">MRI 知识图谱</a>
         <a href="#contact">联系</a>
       </nav>
-      <button id="themeToggle" class="btn-small" style="background:white; color:#0074D9; border:none; border-radius:3px; padding:5px 10px; cursor:pointer;">切换暗色</button>
+      <button id="themeToggle" class="btn-small">切换暗色</button>
     </div>
   </header>
 
@@ -175,14 +171,15 @@
     <section id="hero" class="hero" style="display:flex; margin:40px 0;">
       <div class="hero-left" style="flex:1; padding-right:20px;">
         <h2 class="typing">你好，我是刘宇航</h2>
-        <p>研究方向：...</p>
+        <p>专业：医学影像学</p>
         <div class="hero-buttons">
           <a class="btn" href="#kg">查看知识图谱</a>
           <a class="btn btn-outline" href="#projects">查看项目</a>
         </div>
       </div>
       <div class="hero-right" style="flex:1; text-align:center;">
-        <img id="profilePhoto" src="assets/photo.png" alt="个人照片" style="max-width:250px; border-radius:8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" onerror="this.style.display='none'" />
+        <!-- 使用相对路径，GitHub Pages 会自动处理 -->
+        <img id="profilePhoto" src="./assets/photo.png" alt="个人照片" style="max-width:250px; border-radius:8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" onerror="this.src='https://via.placeholder.com/250x300/0074D9/white?text=个人照片'" />
       </div>
     </section>
 
@@ -193,7 +190,7 @@
 
     <section id="projects" class="card">
       <h3>项目与论文</h3>
-      <p>...</p>
+      <p>无...</p>
     </section>
 
     <section id="kg" class="card">
@@ -204,93 +201,96 @@
     <section id="contact" class="card">
       <h3>联系我</h3>
       <p>邮箱：Yuhang63513@163.com</p>
+      <p>GitHub：<a href="https://github.com/your-username" target="_blank">github.com/your-username</a></p>
     </section>
   </main>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      console.log("页面加载完成"); // 调试用
+      
       // 主题切换功能
       const themeToggle = document.getElementById('themeToggle');
-      themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        themeToggle.textContent = document.body.classList.contains('dark-theme') 
-          ? '切换亮色' 
-          : '切换暗色';
-      });
-
-      // 导航条悬浮效果
-      let links = document.querySelectorAll("nav a");
-      links.forEach(a => {
-        a.addEventListener("mouseover", () => a.style.color = "yellow");
-        a.addEventListener("mouseout", () => a.style.color = "white");
-      });
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          document.body.classList.toggle('dark-theme');
+          themeToggle.textContent = document.body.classList.contains('dark-theme') 
+            ? '切换亮色' 
+            : '切换暗色';
+        });
+      }
 
       // Cytoscape 知识图谱
-      let cy = cytoscape({
-        container: document.getElementById('graph'),
-        elements: [
-          { data: { id: 'MRI', label: 'MRI' } },
-          { data: { id: 'T1', label: 'T1 加权' } },
-          { data: { id: 'T2', label: 'T2 加权' } },
-          { data: { id: 'FLAIR', label: 'FLAIR' } },
-          { data: { id: 'Diffusion', label: '扩散加权' } },
+      try {
+        let cy = cytoscape({
+          container: document.getElementById('graph'),
+          elements: [
+            { data: { id: 'MRI', label: 'MRI' } },
+            { data: { id: 'T1', label: 'T1 加权' } },
+            { data: { id: 'T2', label: 'T2 加权' } },
+            { data: { id: 'FLAIR', label: 'FLAIR' } },
+            { data: { id: 'Diffusion', label: '扩散加权' } },
 
-          { data: { id: 'MRI2T1', source: 'MRI', target: 'T1' } },
-          { data: { id: 'MRI2T2', source: 'MRI', target: 'T2' } },
-          { data: { id: 'MRI2FLAIR', source: 'MRI', target: 'FLAIR' } },
-          { data: { id: 'MRI2Diffusion', source: 'MRI', target: 'Diffusion' } }
-        ],
-        style: [
-          {
-            selector: 'node',
-            style: {
-              'shape': 'rectangle',
-              'width': 120,
-              'height': 80,
-              'label': 'data(label)',
-              'text-valign': 'bottom',
-              'text-halign': 'center',
-              'color': '#333',
-              'background-color': '#fff',
-              'border-width': 2,
-              'border-color': '#0074D9',
-              'font-size': '14px',
-              'font-weight': 'bold'
+            { data: { id: 'MRI2T1', source: 'MRI', target: 'T1' } },
+            { data: { id: 'MRI2T2', source: 'MRI', target: 'T2' } },
+            { data: { id: 'MRI2FLAIR', source: 'MRI', target: 'FLAIR' } },
+            { data: { id: 'MRI2Diffusion', source: 'MRI', target: 'Diffusion' } }
+          ],
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'shape': 'rectangle',
+                'width': 120,
+                'height': 80,
+                'label': 'data(label)',
+                'text-valign': 'bottom',
+                'text-halign': 'center',
+                'color': '#333',
+                'background-color': '#fff',
+                'border-width': 2,
+                'border-color': '#0074D9',
+                'font-size': '14px',
+                'font-weight': 'bold'
+              }
+            },
+            {
+              selector: 'edge',
+              style: {
+                'width': 2,
+                'line-color': '#0074D9',
+                'target-arrow-color': '#0074D9',
+                'target-arrow-shape': 'triangle',
+                'curve-style': 'bezier'
+              }
             }
-          },
-          {
-            selector: 'edge',
-            style: {
-              'width': 2,
-              'line-color': '#0074D9',
-              'target-arrow-color': '#0074D9',
-              'target-arrow-shape': 'triangle',
-              'curve-style': 'bezier'
-            }
+          ],
+          layout: { 
+            name: 'cose', 
+            padding: 30,
+            animate: true,
+            animationDuration: 1000
           }
-        ],
-        layout: { 
-          name: 'cose', 
-          padding: 30,
-          animate: true,
-          animationDuration: 1000
-        }
-      });
+        });
 
-      // 点击节点高亮
-      cy.on('tap', 'node', function(evt){
-        let node = evt.target;
-        cy.elements().style('opacity', 0.3);
-        node.style('opacity', 1);
-        node.neighborhood().style('opacity', 1);
-      });
+        // 点击节点高亮
+        cy.on('tap', 'node', function(evt){
+          let node = evt.target;
+          cy.elements().style('opacity', 0.3);
+          node.style('opacity', 1);
+          node.neighborhood().style('opacity', 1);
+        });
 
-      // 点击空白区域重置
-      cy.on('tap', function(evt){
-        if(evt.target === cy) {
-          cy.elements().style('opacity', 1);
-        }
-      });
+        // 点击空白区域重置
+        cy.on('tap', function(evt){
+          if(evt.target === cy) {
+            cy.elements().style('opacity', 1);
+          }
+        });
+      } catch (error) {
+        console.error('知识图谱初始化失败:', error);
+        document.getElementById('graph').innerHTML = '<p style="text-align:center; padding:50px;">知识图谱加载失败，请刷新页面重试</p>';
+      }
     });
   </script>
 </body>
