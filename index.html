@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>刘宇航个人学术主页</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/modern-normalize/modern-normalize.css" />
+  
+  <!-- 添加基础样式 -->
+  <style>
+    /* 基础样式 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* 卡片样式 */
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      margin: 30px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+    }
+    
+    /* 按钮样式 */
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #0074D9;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+      transition: background 0.3s;
+    }
+    
+    .btn:hover {
+      background: #0056b3;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #0074D9;
+      color: #0074D9;
+    }
+    
+    .btn-outline:hover {
+      background: #0074D9;
+      color: white;
+    }
+    
+    .btn-small {
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    
+    /* 打字效果 */
+    .typing {
+      overflow: hidden;
+      border-right: 2px solid #0074D9;
+      white-space: nowrap;
+      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #0074D9; }
+    }
+    
+    /* 暗色主题 */
+    body.dark-theme {
+      background-color: #1a1a1a;
+      color: #fff;
+    }
+    
+    body.dark-theme .card {
+      background: #2d2d2d;
+      border-color: #444;
+    }
+    
+    body.dark-theme .btn-outline {
+      color: #fff;
+      border-color: #fff;
+    }
+    
+    /* 导航条样式 */
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: yellow;
+    }
+
+    /* 知识图谱容器 */
+    #graph {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #ccc;
+      margin: 40px 0;
+      background: #f8f9fa;
+    }
+    
+    body.dark-theme #graph {
+      background: #2d2d2d;
+      border-color: #444;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .header-row {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .hero {
+        flex-direction: column;
+      }
+      
+      .hero-left, .hero-right {
+        padding: 10px 0;
+        text-align: center;
+      }
+      
+      nav {
+        margin: 15px 0;
+      }
+    }
+  </style>
+
+  <!-- Cytoscape.js -->
+  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+</head>
+<body>
+  <header class="site-header" style="background:#0074D9; padding: 10px 0;">
+    <div class="container header-row" style="display:flex; align-items:center; justify-content:space-between; padding:0 20px;">
+      <h1 class="logo" style="color:white;">刘宇航</h1>
+      <nav class="nav">
+        <a href="#about">关于我</a>
+        <a href="#projects">项目与论文</a>
+        <a href="#kg">MRI 知识图谱</a>
+        <a href="#contact">联系</a>
+      </nav>
+      <button id="themeToggle" class="btn-small" style="background:white; color:#0074D9; border:none; border-radius:3px; padding:5px 10px; cursor:pointer;">切换暗色</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="hero" class="hero" style="display:flex; margin:40px 0;">
+      <div class="hero-left" style="flex:1; padding-right:20px;">
+        <h2 class="typing">你好，我是刘宇航</h2>
+        <p>研究方向：医学影像分析，人工智能在医疗领域的应用</p>
+        <div class="hero-buttons">
+          <a class="btn" href="#kg">查看知识图谱</a>
+          <a class="btn btn-outline" href="#projects">查看项目</a>
+        </div>
+      </div>
+      <div class="hero-right" style="flex:1; text-align:center;">
+        <img id="profilePhoto" src="assets/photo.png" alt="个人照片" style="max-width:250px; border-radius:8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" onerror="this.style.display='none'" />
+      </div>
+    </section>
+
+    <section id="about" class="card">
+      <h3>关于我</h3>
+      <p>我是一名专注于医学影像分析和人工智能的研究者。致力于将先进的计算方法应用于医疗诊断和治疗。</p>
+    </section>
+
+    <section id="projects" class="card">
+      <h3>项目与论文</h3>
+      <p>项目内容正在更新中...</p>
+    </section>
+
+    <section id="kg" class="card">
+      <h3>MRI 知识图谱</h3>
+      <div id="graph"></div>
+    </section>
+
+    <section id="contact" class="card">
+      <h3>联系我</h3>
+      <p>邮箱：example@email.com</p>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 主题切换功能
+      const themeToggle = document.getElementById('themeToggle');
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        themeToggle.textContent = document.body.classList.contains('dark-theme') 
+          ? '切换亮色' 
+          : '切换暗色';
+      });
+
+      // 导航条悬浮效果
+      let links = document.querySelectorAll("nav a");
+      links.forEach(a => {
+        a.addEventListener("mouseover", () => a.style.color = "yellow");
+        a.addEventListener("mouseout", () => a.style.color = "white");
+      });
+
+      // Cytoscape 知识图谱
+      let cy = cytoscape({
+        container: document.getElementById('graph'),
+        elements: [
+          { data: { id: 'MRI', label: 'MRI' } },
+          { data: { id: 'T1', label: 'T1 加权' } },
+          { data: { id: 'T2', label: 'T2 加权' } },
+          { data: { id: 'FLAIR', label: 'FLAIR' } },
+          { data: { id: 'Diffusion', label: '扩散加权' } },
+
+          { data: { id: 'MRI2T1', source: 'MRI', target: 'T1' } },
+          { data: { id: 'MRI2T2', source: 'MRI', target: 'T2' } },
+          { data: { id: 'MRI2FLAIR', source: 'MRI', target: 'FLAIR' } },
+          { data: { id: 'MRI2Diffusion', source: 'MRI', target: 'Diffusion' } }
+        ],
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'shape': 'rectangle',
+              'width': 120,
+              'height': 80,
+              'label': 'data(label)',
+              'text-valign': 'bottom',
+              'text-halign': 'center',
+              'color': '#333',
+              'background-color': '#fff',
+              'border-width': 2,
+              'border-color': '#0074D9',
+              'font-size': '14px',
+              'font-weight': 'bold'
+            }
+          },
+          {
+            selector: 'edge',
+            style: {
+              'width': 2,
+              'line-color': '#0074D9',
+              'target-arrow-color': '#0074D9',
+              'target-arrow-shape': 'triangle',
+              'curve-style': 'bezier'
+            }
+          }
+        ],
+        layout: { 
+          name: 'cose', 
+          padding: 30,
+          animate: true,
+          animationDuration: 1000
+        }
+      });
+
+      // 点击节点高亮
+      cy.on('tap', 'node', function(evt){
+        let node = evt.target;
+        cy.elements().style('opacity', 0.3);
+        node.style('opacity', 1);
+        node.neighborhood().style('opacity', 1);
+      });
+
+      // 点击空白区域重置
+      cy.on('tap', function(evt){
+        if(evt.target === cy) {
+          cy.elements().style('opacity', 1);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
