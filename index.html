@@ -1,39 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>个人学术主页</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>个人学术主页 — 磁共振成像知识图谱</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/modern-normalize/modern-normalize.css" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- vis-network (用于绘制知识图谱) -->
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>刘宇航的学术主页</h1>
-    <nav>
-      <a href="#about">关于我</a>
-      <a href="#research">研究方向</a>
-      <a href="#knowledge-graph">医学影像知识图谱</a>
-    </nav>
+  <header class="site-header">
+    <div class="container header-row">
+      <h1 class="logo">张三（示例）</h1>
+      <nav class="nav">
+        <a href="#about">关于我</a>
+        <a href="#projects">项目与论文</a>
+        <a href="#kg">MRI 知识图谱</a>
+        <a href="#contact">联系</a>
+      </nav>
+      <button id="themeToggle" class="btn-small">切换暗色</button>
+    </div>
   </header>
 
-  <section id="about">
-    <h2>关于我</h2>
-    <p>这里写个人简介</p>
-    <img src="photo.jpg" alt="个人照片">
-  </section>
+  <main class="container">
+    <section id="hero" class="hero">
+      <div class="hero-left">
+        <h2 class="typing">你好，我是 张三 — 医学影像博士生 / 研究员</h2>
+        <p>研究方向：磁共振成像（MRI）物理、序列开发与影像重建；专注医学图像分析与临床应用。</p>
+        <div class="hero-buttons">
+          <a class="btn" href="#kg">查看知识图谱</a>
+          <a class="btn btn-outline" href="#projects">查看项目</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img id="profilePhoto" src="assets/photo.jpg" alt="个人照片" />
+      </div>
+    </section>
 
-  <section id="research">
-    <h2>研究方向</h2>
-    <p>这里写你的研究内容</p>
-  </section>
-
-  <section id="knowledge-graph">
-    <h2>医学影像知识图谱</h2>
-    <div id="graph"></div>
-  </section>
-
-  <footer>
-    <p>© 2025 Yuhang</p>
-  </footer>
-</body>
-</html>
+    <section id="about" class="card">
+      <h3>关于我</h3>
+      <p>（在这里写你的简介、教育
