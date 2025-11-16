@@ -130,6 +130,12 @@
       border-color: #444;
     }
     
+    .profile-img {
+      max-width: 250px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
     @media (max-width: 768px) {
       .header-row {
         flex-direction: column;
@@ -147,6 +153,10 @@
       
       nav {
         margin: 15px 0;
+      }
+      
+      .profile-img {
+        max-width: 200px;
       }
     }
   </style>
@@ -178,19 +188,19 @@
         </div>
       </div>
       <div class="hero-right" style="flex:1; text-align:center;">
-        <!-- 使用相对路径，GitHub Pages 会自动处理 -->
-        <img id="profilePhoto" src="./assets/photo.png" alt="个人照片" style="max-width:250px; border-radius:8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" onerror="this.src='https://via.placeholder.com/250x300/0074D9/white?text=个人照片'" />
+        <!-- 修复图片路径 -->
+        <img id="profilePhoto" class="profile-img" src="assets/photo.png" alt="个人照片" onerror="handleImageError(this, 'profile')" />
       </div>
     </section>
 
     <section id="about" class="card">
       <h3>关于我</h3>
-      <p>我是一名本科生。</p>
+      <p>本科生。</p>
     </section>
 
     <section id="projects" class="card">
       <h3>项目与论文</h3>
-      <p>无...</p>
+      <p>...</p>
     </section>
 
     <section id="kg" class="card">
@@ -201,14 +211,41 @@
     <section id="contact" class="card">
       <h3>联系我</h3>
       <p>邮箱：Yuhang63513@163.com</p>
-      <p>GitHub：<a href="https://github.com/your-username" target="_blank">github.com/your-username</a></p>
+      <p>GitHub：<a href="https://github.com/Yuhang63513" target="_blank">github.com/Yuhang63513</a></p>
     </section>
   </main>
 
   <script>
+    // 图片错误处理函数
+    function handleImageError(img, type) {
+      console.log('图片加载失败:', img.src);
+      if (type === 'profile') {
+        // 使用占位图代替个人照片
+        img.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=250&h=300&fit=crop&crop=face';
+        img.alt = '个人照片（占位图）';
+      }
+    }
+
+    // 检查图片是否存在
+    function checkImageExists(url, callback) {
+      const img = new Image();
+      img.onload = function() { callback(true); };
+      img.onerror = function() { callback(false); };
+      img.src = url;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      console.log("页面加载完成"); // 调试用
+      console.log("页面加载完成");
       
+      // 检查个人照片是否存在
+      checkImageExists('assets/photo.png', function(exists) {
+        if (!exists) {
+          console.log('个人照片不存在，使用占位图');
+          const profilePhoto = document.getElementById('profilePhoto');
+          profilePhoto.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=250&h=300&fit=crop&crop=face';
+        }
+      });
+
       // 主题切换功能
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) {
@@ -220,16 +257,16 @@
         });
       }
 
-      // Cytoscape 知识图谱
+      // Cytoscape 知识图谱 - 移除图片依赖，使用纯色节点
       try {
         let cy = cytoscape({
           container: document.getElementById('graph'),
           elements: [
-            { data: { id: 'MRI', label: 'MRI' } },
-            { data: { id: 'T1', label: 'T1 加权' } },
-            { data: { id: 'T2', label: 'T2 加权' } },
-            { data: { id: 'FLAIR', label: 'FLAIR' } },
-            { data: { id: 'Diffusion', label: '扩散加权' } },
+            { data: { id: 'MRI', label: 'MRI\n磁共振成像' } },
+            { data: { id: 'T1', label: 'T1 加权\n组织解剖结构' } },
+            { data: { id: 'T2', label: 'T2 加权\n水含量显示' } },
+            { data: { id: 'FLAIR', label: 'FLAIR\n液体衰减反转恢复' } },
+            { data: { id: 'Diffusion', label: '扩散加权\n水分子扩散' } },
 
             { data: { id: 'MRI2T1', source: 'MRI', target: 'T1' } },
             { data: { id: 'MRI2T2', source: 'MRI', target: 'T2' } },
@@ -240,24 +277,33 @@
             {
               selector: 'node',
               style: {
-                'shape': 'rectangle',
-                'width': 120,
-                'height': 80,
+                'shape': 'round-rectangle',
+                'width': 140,
+                'height': 100,
                 'label': 'data(label)',
-                'text-valign': 'bottom',
+                'text-valign': 'center',
                 'text-halign': 'center',
                 'color': '#333',
-                'background-color': '#fff',
-                'border-width': 2,
+                'background-color': '#e3f2fd',
+                'border-width': 3,
                 'border-color': '#0074D9',
                 'font-size': '14px',
-                'font-weight': 'bold'
+                'font-weight': 'bold',
+                'text-wrap': 'wrap',
+                'text-max-width': '120px'
+              }
+            },
+            {
+              selector: 'node:selected',
+              style: {
+                'background-color': '#bbdefb',
+                'border-color': '#0056b3'
               }
             },
             {
               selector: 'edge',
               style: {
-                'width': 2,
+                'width': 3,
                 'line-color': '#0074D9',
                 'target-arrow-color': '#0074D9',
                 'target-arrow-shape': 'triangle',
@@ -267,29 +313,54 @@
           ],
           layout: { 
             name: 'cose', 
-            padding: 30,
+            padding: 50,
             animate: true,
-            animationDuration: 1000
+            animationDuration: 1000,
+            idealEdgeLength: 100,
+            nodeRepulsion: 4500
           }
         });
 
         // 点击节点高亮
-        cy.on('tap', 'node', function(evt){
+        cy.on('tap', 'node', function(evt) {
           let node = evt.target;
-          cy.elements().style('opacity', 0.3);
-          node.style('opacity', 1);
-          node.neighborhood().style('opacity', 1);
+          cy.elements().removeClass('highlighted');
+          node.addClass('highlighted');
+          node.neighborhood().addClass('highlighted');
         });
 
         // 点击空白区域重置
-        cy.on('tap', function(evt){
-          if(evt.target === cy) {
-            cy.elements().style('opacity', 1);
+        cy.on('tap', function(evt) {
+          if (evt.target === cy) {
+            cy.elements().removeClass('highlighted');
           }
         });
+
+        // 添加高亮样式
+        cy.style()
+          .selector('.highlighted')
+          .style({
+            'opacity': 1
+          })
+          .selector('node:not(.highlighted)')
+          .style({
+            'opacity': 0.3
+          })
+          .selector('edge:not(.highlighted)')
+          .style({
+            'opacity': 0.2
+          })
+          .update();
+
       } catch (error) {
         console.error('知识图谱初始化失败:', error);
-        document.getElementById('graph').innerHTML = '<p style="text-align:center; padding:50px;">知识图谱加载失败，请刷新页面重试</p>';
+        document.getElementById('graph').innerHTML = `
+          <div style="text-align:center; padding:50px;">
+            <h4>知识图谱加载失败</h4>
+            <p>请刷新页面重试</p>
+            <button onclick="window.location.reload()" class="btn" style="margin-top:20px;">刷新页面</button>
+          </div>
+        `;
       }
     });
   </script>
