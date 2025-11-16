@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>刘宇航个人学术主页</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/modern-normalize/modern-normalize.css" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Cytoscape.js -->
+  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+
+  <style>
+    /* 简单导航条样式 */
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: yellow;
+    }
+
+    /* 知识图谱容器 */
+    #graph {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #ccc;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" style="background:#0074D9; padding: 10px 0;">
+    <div class="container header-row" style="display:flex; align-items:center; justify-content:space-between; padding:0 20px;">
+      <h1 class="logo" style="color:white;">张三（示例）</h1>
+      <nav class="nav">
+        <a href="#about">关于我</a>
+        <a href="#projects">项目与论文</a>
+        <a href="#kg">MRI 知识图谱</a>
+        <a href="#contact">联系</a>
+      </nav>
+      <button id="themeToggle" class="btn-small">切换暗色</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="hero" class="hero" style="display:flex; margin:40px 0;">
+      <div class="hero-left" style="flex:1; padding-right:20px;">
+        <h2 class="typing">你好，我是刘宇航</h2>
+        <p>研究方向：尚无...</p>
+        <div class="hero-buttons">
+          <a class="btn" href="#kg">查看知识图谱</a>
+          <a class="btn btn-outline" href="#projects">查看项目</a>
+        </div>
+      </div>
+      <div class="hero-right" style="flex:1; text-align:center;">
+        <img id="profilePhoto" src="assets/photo.jpg" alt="个人照片" style="max-width:250px; border-radius:8px;" />
+      </div>
+    </section>
+
+    <section id="about" class="card">
+      <h3>关于我</h3>
+      <p>Hard & Black</p>
+    </section>
+
+    <section id="kg" class="card">
+      <h3>MRI 知识图谱</h3>
+      <div id="graph"></div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 导航条悬浮效果
+      let links = document.querySelectorAll("nav a");
+      links.forEach(a => {
+        a.addEventListener("mouseover", () => a.style.color = "yellow");
+        a.addEventListener("mouseout", () => a.style.color = "white");
+      });
+
+      // Cytoscape 知识图谱
+      let cy = cytoscape({
+        container: document.getElementById('graph'),
+        elements: [
+          { data: { id: 'MRI', label: 'MRI' } },
+          { data: { id: 'T1', label: 'T1 加权' } },
+          { data: { id: 'T2', label: 'T2 加权' } },
+          { data: { id: 'FLAIR', label: 'FLAIR' } },
+          { data: { id: 'Diffusion', label: '扩散加权' } },
+
+          { data: { id: 'MRI2T1', source: 'MRI', target: 'T1' } },
+          { data: { id: 'MRI2T2', source: 'MRI', target: 'T2' } },
+          { data: { id: 'MRI2FLAIR', source: 'MRI', target: 'FLAIR' } },
+          { data: { id: 'MRI2Diffusion', source: 'MRI', target: 'Diffusion' } }
+        ],
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'shape': 'rectangle',
+              'width': 100,
+              'height': 100,
+              'label': 'data(label)',
+              'text-valign': 'bottom',
+              'text-halign': 'center',
+              'color': '#fff',
+              'background-fit': 'cover',
+              // 根据节点 id 显示图片
+              'background-image': function(ele){
+                switch(ele.id()) {
+                  case 'MRI': return 'images/mri.png';
+                  case 'T1': return 'images/t1.png';
+                  case 'T2': return 'images/t2.png';
+                  case 'FLAIR': return 'images/flair.png';
+                  case 'Diffusion': return 'images/diffusion.png';
+                }
+              }
+            }
+          },
+          {
+            selector: 'edge',
+            style: {
+              'width': 2,
+              'line-color': '#aaa',
+              'target-arrow-color': '#aaa',
+              'target-arrow-shape': 'triangle'
+            }
+          }
+        ],
+        layout: { name: 'cose', padding: 30 }
+      });
+
+      // 点击节点高亮
+      cy.on('tap', 'node', function(evt){
+        let node = evt.target;
+        cy.nodes().forEach(n => n.style('opacity', 0.3));
+        node.style('opacity', 1);
+        node.connectedEdges().style('opacity', 1);
+      });
+
+      // 点击空白区域重置
+      cy.on('tap', function(evt){
+        if(evt.target === cy) {
+          cy.nodes().forEach(n => n.style('opacity', 1));
+        }
+      });
+    });
+  </script>
+</body>
+</html>
