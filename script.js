@@ -43,4 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
       name: 'circle'
     }
   });
+    cy.on('tap', 'node', function(evt){
+    let node = evt.target;
+    cy.nodes().forEach(n => n.style('opacity', 0.3));
+    node.style('opacity', 1);
+    node.connectedEdges().style('opacity', 1);
+  });
+
 });
