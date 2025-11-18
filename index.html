@@ -231,16 +231,22 @@
       let cy = cytoscape({
         container: document.getElementById('graph'),
         elements: [
+          // 中心节点
+          { data: { id: 'center', label: '医学影像学' } },
+          
+          // 其他节点
           { data: { id: 'MRI', label: 'MRI' } },
           { data: { id: 'T1', label: 'T1 加权' } },
           { data: { id: 'T2', label: 'T2 加权' } },
           { data: { id: 'FLAIR', label: 'FLAIR' } },
           { data: { id: 'Diffusion', label: '扩散加权' } },
 
-          { data: { id: 'MRI2T1', source: 'MRI', target: 'T1' } },
-          { data: { id: 'MRI2T2', source: 'MRI', target: 'T2' } },
-          { data: { id: 'MRI2FLAIR', source: 'MRI', target: 'FLAIR' } },
-          { data: { id: 'MRI2Diffusion', source: 'MRI', target: 'Diffusion' } }
+          // 所有节点连接到中心点
+          { data: { id: 'center2MRI', source: 'center', target: 'MRI' } },
+          { data: { id: 'center2T1', source: 'center', target: 'T1' } },
+          { data: { id: 'center2T2', source: 'center', target: 'T2' } },
+          { data: { id: 'center2FLAIR', source: 'center', target: 'FLAIR' } },
+          { data: { id: 'center2Diffusion', source: 'center', target: 'Diffusion' } }
         ],
         style: [
           {
@@ -258,18 +264,21 @@
               'border-width': 2,
               'border-color': '#0074D9',
               'font-size': '14px',
-              'font-weight': 'bold',
-              // 图片路径 - 使用相对路径
-              'background-image': function(ele){
-                switch(ele.id()) {
-                  case 'MRI': return 'images/mri.png';
-                  case 'T1': return 'images/t1.png';
-                  case 'T2': return 'images/t2.png';
-                  case 'FLAIR': return 'images/flair.png';
-                  case 'Diffusion': return 'images/diffusion.png';
-                  default: return '#0074D9';
-                }
-              }
+              'font-weight': 'bold'
+            }
+          },
+          {
+            selector: '#center',
+            style: {
+              'shape': 'ellipse',
+              'width': 80,
+              'height': 80,
+              'background-color': '#0074D9',
+              'color': 'white',
+              'font-size': '16px',
+              'text-valign': 'center',
+              'border-width': 4,
+              'border-color': '#0056b3'
             }
           },
           {
@@ -291,14 +300,42 @@
           }
         ],
         layout: { 
-          name: 'cose', 
+          name: 'circle', // 使用圆形布局
           padding: 50,
           animate: true,
           animationDuration: 1000,
-          idealEdgeLength: 100,
-          nodeRepulsion: 4500
+          avoidOverlap: true,
+          nodeDimensionsIncludeLabels: true,
+          spacingFactor: 1.5,
+          radius: 200
         }
       });
+
+      // 为节点设置背景图片
+      cy.style()
+        .selector('#MRI')
+        .style('background-image', 'images/mri.png')
+        .update();
+      
+      cy.style()
+        .selector('#T1')
+        .style('background-image', 'images/t1.png')
+        .update();
+      
+      cy.style()
+        .selector('#T2')
+        .style('background-image', 'images/t2.png')
+        .update();
+      
+      cy.style()
+        .selector('#FLAIR')
+        .style('background-image', 'images/flair.png')
+        .update();
+      
+      cy.style()
+        .selector('#Diffusion')
+        .style('background-image', 'images/diffusion.png')
+        .update();
 
       // 图片加载测试
       console.log('开始测试图片加载...');
